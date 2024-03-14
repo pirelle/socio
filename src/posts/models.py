@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, String, Boolean
+from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from users.models import User
@@ -6,7 +6,7 @@ from utils.database import Base, CreatedUpdatedMixin
 
 
 class Post(CreatedUpdatedMixin, Base):
-    __tablename__ = 'posts_post'
+    __tablename__ = "posts_post"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey(User.id))

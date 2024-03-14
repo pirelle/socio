@@ -14,6 +14,7 @@ class ImageSchema(CreatedUpdatedSchema):
     post_id: int
     order: int
 
+
 class CommentSchema(CreatedUpdatedSchema):
     id: int
     post_id: int

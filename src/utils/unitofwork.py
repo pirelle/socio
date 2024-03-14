@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Type
 
-from sqlalchemy.orm import Session
-
-from utils.database import async_session_maker, get_session, get_async_session
+from posts.repositories import CommentRepository, ImageRepository, PostRepository
 from users.repositories import UserRepository
-from posts.repositories import PostRepository, ImageRepository, CommentRepository
+from utils.database import async_session_maker
 
 
 class AbstractUnitOfWork(ABC):

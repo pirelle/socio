@@ -1,4 +1,4 @@
-from posts.models import Post, Image, Comment
+from posts.models import Comment, Image, Post
 from utils.repository import SQLAlchemyRepository
 
 

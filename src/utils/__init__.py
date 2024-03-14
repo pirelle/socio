@@ -1,2 +1,2 @@
-from posts.models import *
-from users.models import *
+from posts.models import *  # noqa
+from users.models import *  # noqa

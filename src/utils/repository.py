@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from utils.database import async_session_maker
+from sqlalchemy.orm import DeclarativeBase
 
 
 class AbstractRepository(ABC):
@@ -16,12 +15,13 @@ class AbstractRepository(ABC):
 
 
 class SQLAlchemyRepository(AbstractRepository):
-    model = None
+    model: type[DeclarativeBase] | None = None
 
     def __init__(self, session: AsyncSession):
         self.session = session
 
     async def add_one(self, data: dict):
+        assert isinstance(self.model, DeclarativeBase)
         stmt = insert(self.model).values(**data).returning(self.model.id)
         res = await self.session.execute(stmt)
         await self.session.commit()

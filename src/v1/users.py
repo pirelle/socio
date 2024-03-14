@@ -1,10 +1,8 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from users.schemas import UserSchemaAdd
 from users.services import UserService
-from v1.dependencies import UOWDep, user_service
+from v1.dependencies import UOWDep
 
 router = APIRouter(
     prefix="/users",
