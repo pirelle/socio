@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from pydantic import BaseModel
 from sqlalchemy import DateTime, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -14,12 +15,13 @@ async_session_maker = async_sessionmaker(
 )
 
 
-class Base(DeclarativeBase):
+class BaseWithId(DeclarativeBase):
+    schema_to_read: type[BaseModel] | None = None
+    id: Mapped[int] = mapped_column(primary_key=True)
 
     def to_read_model(self):
-        from users.schemas import UserSchema
-
-        return UserSchema(**self.__dict__)
+        assert issubclass(self.schema_to_read, BaseModel)
+        return self.schema_to_read(**self.__dict__)
 
 
 class CreatedUpdatedMixin:

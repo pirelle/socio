@@ -2,13 +2,14 @@ from sqlalchemy import Boolean, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from users.enums import UserType
-from utils.database import Base, CreatedUpdatedMixin
+from users.schemas import UserSchema
+from utils.database import BaseWithId, CreatedUpdatedMixin
 
 
-class User(CreatedUpdatedMixin, Base):
+class User(CreatedUpdatedMixin, BaseWithId):
     __tablename__ = "users_user"
+    schema_to_read = UserSchema
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     first_name: Mapped[str] = mapped_column(String(30), nullable=True)
     last_name: Mapped[str] = mapped_column(String(30), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)

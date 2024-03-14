@@ -29,8 +29,7 @@ class AbstractUnitOfWork(ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-    def __init__(self):
-        self.session_factory = async_session_maker
+    session_factory = async_session_maker
 
     async def __aenter__(self):
         self.session = self.session_factory()
@@ -40,6 +39,7 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         self.comments = CommentRepository(self.session)
 
     async def __aexit__(self, *args):
+        await self.rollback()
         await self.session.close()
 
     async def commit(self):
