@@ -2,6 +2,7 @@ from sqlalchemy import String, Boolean, Enum
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from users.enums import UserType
+
 from utils.database import Base, CreatedUpdatedMixin
 
 

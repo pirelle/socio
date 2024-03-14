@@ -10,7 +10,7 @@ class Post(CreatedUpdatedMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey(User.id))
-    title: Mapped[str] = mapped_column(String(1000), nullable=True)
+    text: Mapped[str] = mapped_column(String(1000), nullable=True)
     allow_comments: Mapped[bool] = mapped_column(Boolean, default=True)
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
 

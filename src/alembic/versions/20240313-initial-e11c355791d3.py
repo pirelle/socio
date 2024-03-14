@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 5093b2bc0a56
-Revises: 
-Create Date: 2024-03-12 22:25:57.846907
+Revision ID: e11c355791d3
+Revises:
+Create Date: 2024-03-13 09:28:08.299278
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '5093b2bc0a56'
+revision: str = 'e11c355791d3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -73,4 +73,5 @@ def downgrade() -> None:
     op.drop_table('posts_comment')
     op.drop_table('posts_post')
     op.drop_table('users_user')
+    sa.Enum(name="usertype").drop(op.get_bind(), checkfirst=False)
     # ### end Alembic commands ###
