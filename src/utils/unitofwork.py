@@ -32,11 +32,11 @@ class AbstractUnitOfWork(ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-    def __init__(self, session_factory=async_session_maker):
-        self.session_factory = session_factory
+    def __init__(self):
+        self.session_factory = async_session_maker
 
     async def __aenter__(self):
-        self.session = self.session_factory()  # type: AsyncSession
+        self.session = self.session_factory()
         self.users = UserRepository(self.session)
         self.posts = PostRepository(self.session)
         self.images = ImageRepository(self.session)

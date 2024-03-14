@@ -15,18 +15,16 @@ router = APIRouter(
 
 @router.get("")
 async def get_users(
-    # uow: UOWDep,
-    users_service: Annotated[UserService, Depends(user_service)]
+    uow: UOWDep,
 ):
-    # users = await UserService(uow).get_users()
-    users = await users_service.get_users()
+    users = await UserService(uow).get_users()
     return users
 
 
 @router.post("")
 async def add_user(
     user: UserSchemaAdd,
-    users_service: Annotated[UserService, Depends(user_service)],
+    uow: UOWDep,
 ):
-    user_id = await users_service.add_user(user)
+    user_id = await UserService(uow).add_user(user)
     return {"user_id": user_id}
