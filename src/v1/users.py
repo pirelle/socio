@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends
 
 from users.schemas import UserSchemaAdd
 from users.services import UserService
-# from users.services import UserService
 from v1.dependencies import UOWDep, user_service
 
 router = APIRouter(
