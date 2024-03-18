@@ -1,9 +1,9 @@
 from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from common.database import BaseWithId, CreatedUpdatedMixin
 from posts.schemas import CommentSchema, ImageSchema, PostSchema
 from users.models import User
-from common.database import BaseWithId, CreatedUpdatedMixin
 
 
 class Post(CreatedUpdatedMixin, BaseWithId):

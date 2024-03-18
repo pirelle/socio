@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 
-
-from posts.repositories import CommentRepository, ImageRepository, PostRepository
-from users.repositories import UserRepository
 from common.database import async_session_maker
 from common.repository import AbstractRepository
+from posts.repositories import CommentRepository, ImageRepository, PostRepository
+from users.repositories import UserRepository
 
 
 class AbstractUnitOfWork(ABC):

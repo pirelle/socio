@@ -1,5 +1,5 @@
-from posts.models import Comment, Image, Post
 from common.repository import SQLAlchemyRepository
+from posts.models import Comment, Image, Post
 
 
 class PostRepository(SQLAlchemyRepository):

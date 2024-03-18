@@ -1,5 +1,5 @@
-from users.models import Follower, User
 from common.repository import SQLAlchemyRepository
+from users.models import Follower, User
 
 
 class UserRepository(SQLAlchemyRepository):

@@ -8,3 +8,8 @@ asyncio_mode='auto'
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.mypy]
+mypy_path = "src"
+explicit_package_bases = "True"
+ignore_missing_imports = "True"

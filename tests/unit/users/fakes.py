@@ -1,13 +1,13 @@
-from users.schemas import UserSchema
 from common.repository import AbstractRepository
 from common.unitofwork import AbstractUnitOfWork
+from users.schemas import UserSchema
 
 
 class FakeRepository(AbstractRepository):
     def __init__(self, batches):
         self._batches = set(batches)
 
-    async def add_one(self, batch, *args, **kwargs):
+    async def add(self, batch, *args, **kwargs):
         user = UserSchema(**batch, id=1)
         self._batches.add(user)
         return user.id
@@ -21,7 +21,7 @@ class FakeRepository(AbstractRepository):
             )
         )
 
-    async def find_all(self):
+    async def get_all(self):
         return self._batches
 
 

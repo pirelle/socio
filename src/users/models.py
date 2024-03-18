@@ -1,9 +1,9 @@
 from sqlalchemy import Boolean, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from common.database import BaseWithId, CreatedUpdatedMixin
 from users.enums import UserType
 from users.schemas import FollowerSchema, UserSchema
-from common.database import BaseWithId, CreatedUpdatedMixin
 
 
 class User(CreatedUpdatedMixin, BaseWithId):

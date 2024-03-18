@@ -25,7 +25,7 @@ class TestUserService:
         user_id = await UserService(self.uow).add_user(user)
         assert user_id == 1
 
-        created_users = list(await self.uow.users.find_all())
+        created_users = list(await self.uow.users.get_all())
         assert len(created_users) == 1
 
         expected_user = UserSchema(**user.__dict__, id=user_id)

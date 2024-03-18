@@ -1,36 +1,37 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from config import get_test_postgresql_url, get_test_async_postgresql_url
 from common.database import BaseWithId
 from common.models import *  # noqa
-
-
-def get_test_session_maker():
-    async_engine = create_async_engine(
-        get_test_async_postgresql_url(),
-        echo=True,
-    )
-    async_session_maker = async_sessionmaker(
-        async_engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
-    )
-    return async_session_maker
+from config import get_test_async_postgresql_url, get_test_postgresql_url
 
 
 @pytest.fixture(scope="session")
 async def psql_create_db():
     engine = create_engine(get_test_postgresql_url())
+
+    BaseWithId.metadata.drop_all(engine)
     BaseWithId.metadata.create_all(engine)
-    yield None
+
+    yield engine
+
     BaseWithId.metadata.drop_all(engine)
 
 
 @pytest.fixture(scope="function")
-async def start_end_test_transaction(psql_create_db):
-    async_session = get_test_session_maker()()
-    async with async_session.begin():
-        yield None
-    await async_session.rollback()
+async def async_session(psql_create_db):
+    async_engine = create_async_engine(
+        get_test_async_postgresql_url(),
+        # echo=True,
+    )
+    ASession = async_sessionmaker()
+    async_connection = await async_engine.connect()
+    async_trans = await async_connection.begin()
+    asession = ASession(bind=async_connection, join_transaction_mode="create_savepoint")
+
+    yield asession
+
+    await asession.close()
+    await async_trans.rollback()
+    await async_connection.close()

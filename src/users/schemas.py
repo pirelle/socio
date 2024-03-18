@@ -1,7 +1,7 @@
 from pydantic import EmailStr
 
-from users.enums import UserType
 from common.schemas import CreatedUpdatedSchema
+from users.enums import UserType
 
 
 class UserSchemaAdd(CreatedUpdatedSchema):
