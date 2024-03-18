@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from posts.schemas import CommentSchema, ImageSchema, PostSchema
 from users.models import User
-from utils.database import BaseWithId, CreatedUpdatedMixin
+from common.database import BaseWithId, CreatedUpdatedMixin
 
 
 class Post(CreatedUpdatedMixin, BaseWithId):

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from utils.database import BaseWithId
+from common.database import BaseWithId
 
 
 class AbstractRepository(ABC):

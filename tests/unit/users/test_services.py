@@ -15,7 +15,7 @@ class TestUserService:
         user = UserSchemaAdd(
             first_name="John",
             last_name="Doe",
-            email="<EMAIL>",
+            email="email@email.com",
             password="pass",
             is_active=True,
             user_type=UserType.REGULAR,

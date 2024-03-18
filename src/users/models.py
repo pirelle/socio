@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from users.enums import UserType
 from users.schemas import FollowerSchema, UserSchema
-from utils.database import BaseWithId, CreatedUpdatedMixin
+from common.database import BaseWithId, CreatedUpdatedMixin
 
 
 class User(CreatedUpdatedMixin, BaseWithId):

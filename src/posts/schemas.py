@@ -1,4 +1,4 @@
-from utils.schemas import CreatedUpdatedSchema
+from common.schemas import CreatedUpdatedSchema
 
 
 class PostSchema(CreatedUpdatedSchema):

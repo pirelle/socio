@@ -26,10 +26,10 @@ class BaseWithId(DeclarativeBase):
 
 class CreatedUpdatedMixin:
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=datetime.utcnow
+        DateTime(timezone=True), server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=func.current_timestamp(),
+        server_default=func.now(),
+        onupdate=func.now(),
     )

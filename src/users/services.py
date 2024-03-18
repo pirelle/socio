@@ -1,5 +1,5 @@
 from users.schemas import UserSchema, UserSchemaAdd
-from utils.unitofwork import AbstractUnitOfWork
+from common.unitofwork import AbstractUnitOfWork
 
 
 class UserService:

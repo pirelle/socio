@@ -1,11 +1,13 @@
+from pydantic import EmailStr
+
 from users.enums import UserType
-from utils.schemas import CreatedUpdatedSchema
+from common.schemas import CreatedUpdatedSchema
 
 
 class UserSchemaAdd(CreatedUpdatedSchema):
     first_name: str
     last_name: str
-    email: str
+    email: EmailStr
     password: str
     is_active: bool
     user_type: UserType

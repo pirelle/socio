@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 
+
 from posts.repositories import CommentRepository, ImageRepository, PostRepository
 from users.repositories import UserRepository
-from utils.database import async_session_maker
-from utils.repository import AbstractRepository
+from common.database import async_session_maker
+from common.repository import AbstractRepository
 
 
 class AbstractUnitOfWork(ABC):
@@ -30,7 +31,8 @@ class AbstractUnitOfWork(ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-    session_factory = async_session_maker
+    def __init__(self, session_maker=async_session_maker):
+        self.session_factory = session_maker
 
     async def __aenter__(self):
         self.session = self.session_factory()

@@ -1,6 +1,6 @@
 from users.schemas import UserSchema
-from utils.repository import AbstractRepository
-from utils.unitofwork import AbstractUnitOfWork
+from common.repository import AbstractRepository
+from common.unitofwork import AbstractUnitOfWork
 
 
 class FakeRepository(AbstractRepository):
