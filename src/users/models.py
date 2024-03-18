@@ -1,8 +1,8 @@
-from sqlalchemy import Boolean, Enum, String, ForeignKey
+from sqlalchemy import Boolean, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from users.enums import UserType
-from users.schemas import UserSchema, FollowerSchema
+from users.schemas import FollowerSchema, UserSchema
 from utils.database import BaseWithId, CreatedUpdatedMixin
 
 
