@@ -9,5 +9,9 @@ for router in all_routers:
     app.include_router(router)
 
 
+@app.get("/")
+async def read_main():
+    return {"msg": "Hello World"}
+
 if __name__ == "__main__":
     uvicorn.run(app="main:app", reload=True)

@@ -13,3 +13,8 @@ class UserSchemaAdd(CreatedUpdatedSchema):
 
 class UserSchema(UserSchemaAdd):
     id: int
+
+
+class FollowerSchema(CreatedUpdatedSchema):
+    follower_id: int
+    following_id: int

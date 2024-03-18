@@ -1,3 +1,5 @@
+import importlib
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -5,8 +7,9 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from config import PG_HOST, PGPORT, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER
 
-# from users.models import Base
 from utils.database import BaseWithId
+
+from utils.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
