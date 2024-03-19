@@ -1,6 +1,7 @@
 from pydantic import EmailStr
 
 from common.schemas import CreatedUpdatedSchema
+from posts.schemas import PostSchema
 from users.enums import UserType
 
 
@@ -13,10 +14,12 @@ class UserSchemaAdd(CreatedUpdatedSchema):
     user_type: UserType
 
 
-class UserSchema(UserSchemaAdd):
-    id: int
-
-
 class FollowerSchema(CreatedUpdatedSchema):
     follower_id: int
     following_id: int
+
+
+class UserSchema(UserSchemaAdd):
+    id: int
+    posts: list[PostSchema] | None = None
+    followers: list[int] | None = None

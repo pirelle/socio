@@ -15,6 +15,10 @@ def get_postgresql_url():
     return f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{PG_HOST}:{PGPORT}/{POSTGRES_DB}"
 
 
+def get_sync_postgresql_url():
+    return f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{PG_HOST}:{PGPORT}/{POSTGRES_DB}"
+
+
 def get_test_async_postgresql_url():
     return f"postgresql+asyncpg://test_{POSTGRES_USER}:test_{POSTGRES_PASSWORD}@{PG_HOST}:{PGPORT}/test_{POSTGRES_DB}"
 

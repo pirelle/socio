@@ -37,13 +37,15 @@ class TestUserRepository:
         created_users = await user_repo.get_all()
         assert len(created_users) == 6
 
-    async def test_filter2(self, async_session: AsyncSession):
-        UserFactory.create_batch(
-            3, user_type=UserType.REGULAR, session=async_session.sync_session
+    async def test_with_followers(self, async_session: AsyncSession):
+        users = UserFactory.build_batch(
+            3, user_type=UserType.REGULAR
         )
-        UserFactory.create_batch(
-            3, user_type=UserType.MODERATOR, session=async_session.sync_session
-        )
+        async_session.add_all(users)
+        await async_session.commit()
         user_repo = UserRepository(async_session)
         created_users = await user_repo.get_all()
+
+
+        created_users = await user_repo.get_with_followers(user_id=created_users[0].id)
         assert len(created_users) == 6

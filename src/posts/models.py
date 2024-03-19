@@ -1,7 +1,8 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 
 from common.database import BaseWithId, CreatedUpdatedMixin
+from posts.enums import ContentType
 from posts.schemas import CommentSchema, ImageSchema, PostSchema
 from users.models import User
 
@@ -31,3 +32,11 @@ class Comment(CreatedUpdatedMixin, BaseWithId):
     post_id: Mapped[int] = mapped_column(ForeignKey(Post.id))
     user_id: Mapped[int] = mapped_column(ForeignKey(User.id))
     text: Mapped[str] = mapped_column(String(500))
+
+
+class Like(CreatedUpdatedMixin, BaseWithId):
+    __tablename__ = "posts_like"
+
+    content_type: Mapped[ContentType] = mapped_column(Enum(ContentType))
+    content_id: Mapped[int] = mapped_column(Integer())
+    user_id: Mapped[int] = mapped_column(ForeignKey(User.id))

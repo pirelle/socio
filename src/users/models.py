@@ -22,5 +22,5 @@ class Follower(CreatedUpdatedMixin, BaseWithId):
     __tablename__ = "users_follower"
     schema_to_read = FollowerSchema
 
-    follower: Mapped[int] = mapped_column(ForeignKey(User.id))
-    following: Mapped[int] = mapped_column(ForeignKey(User.id))
+    follower_id: Mapped[int] = mapped_column(ForeignKey(User.id))
+    following_id: Mapped[int] = mapped_column(ForeignKey(User.id))
