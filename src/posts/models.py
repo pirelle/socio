@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Enum
+from sqlalchemy import Boolean, ForeignKey, Integer, String, Enum, true
 from sqlalchemy.orm import Mapped, mapped_column
 
 from common.database import BaseWithId, CreatedUpdatedMixin
@@ -13,8 +13,8 @@ class Post(CreatedUpdatedMixin, BaseWithId):
 
     user_id: Mapped[int] = mapped_column(ForeignKey(User.id))
     text: Mapped[str] = mapped_column(String(1000), nullable=True)
-    allow_comments: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
+    allow_comments: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
+    is_published: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
 
 
 class Image(CreatedUpdatedMixin, BaseWithId):
@@ -22,6 +22,7 @@ class Image(CreatedUpdatedMixin, BaseWithId):
     schema_to_read = ImageSchema
 
     post_id: Mapped[int] = mapped_column(ForeignKey(Post.id))
+    image_path: Mapped[str] = mapped_column(String())
     order: Mapped[int] = mapped_column(Integer())
 
 

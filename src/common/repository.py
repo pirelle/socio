@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from sqlalchemy import insert, select
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.database import BaseWithId
@@ -12,6 +13,9 @@ class AbstractRepository(ABC):
         raise NotImplementedError
 
     async def get_all(self, *args, **kwargs):
+        raise NotImplementedError
+
+    async def get(self, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -36,11 +40,13 @@ class SQLAlchemyRepository(AbstractRepository):
     async def get(self, **filter_by):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        res = res.scalar_one().to_read_model()
+        try:
+            res = res.scalar_one().to_read_model()
+        except NoResultFound:
+            res = None
         return res
 
     async def filter(self, **filter_by):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        res = res.scalar_one().to_read_model()
-        return res
+        return [row[0].to_read_model() for row in res.all()]

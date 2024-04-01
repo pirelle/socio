@@ -1,9 +1,22 @@
+from datetime import timedelta, datetime
+from sqlalchemy import select
+
+from jose import jwt
+from passlib.context import CryptContext
+from sqlalchemy.exc import NoResultFound
+
 from common.unitofwork import AbstractUnitOfWork
+from users.models import User
+from users.repositories import UserRepository
 from users.schemas import UserSchema, UserSchemaAdd
+from utils.utils import now
+from config import SECRET_KEY
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UserService:
-    def __init__(self, uow: AbstractUnitOfWork):
+    def __init__(self, uow):
         self.uow = uow
 
     async def add_user(self, user: UserSchemaAdd) -> int:
@@ -17,3 +30,32 @@ class UserService:
         async with self.uow:
             users = await self.uow.users.get_all()
             return users
+
+    async def authenticate_user(self, uow: AbstractUnitOfWork, username: str, password: str) -> UserSchema | None:
+        async with uow:
+            user = await uow.users.get(email=username)
+            # users = await self.uow.users.get_all()
+            # breakpoint()
+            ...
+        if not user:
+            return None
+        if not pwd_context.verify(password, user.password):
+            return None
+        return user
+
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
+    return encoded_jwt
+
+
+class SyncUserService:
+    def __init__(self, session):
+        self.session = session
+
+    def get_users(self) -> list[UserSchema]:
+        stmt = select(User)
+        res = self.session.execute(stmt)
+        res = [row[0].to_read_model() for row in res.all()]
+        return res

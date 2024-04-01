@@ -13,7 +13,7 @@ class User(CreatedUpdatedMixin, BaseWithId):
     first_name: Mapped[str] = mapped_column(String(30), nullable=True)
     last_name: Mapped[str] = mapped_column(String(30), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(String(32), nullable=True)
+    password: Mapped[str] = mapped_column(String(80), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType))
 

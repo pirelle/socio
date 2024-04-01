@@ -12,7 +12,7 @@ class TestUserService:
         cls.uow = FakeUnitOfWork()
 
     async def test_add_one(self):
-        user = UserSchemaAdd(
+        user_data = UserSchemaAdd(
             first_name="John",
             last_name="Doe",
             email="email@email.com",
@@ -22,11 +22,11 @@ class TestUserService:
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
         )
-        user_id = await UserService(self.uow).add_user(user)
+        user_id = await UserService(uow=self.uow).add_user(user_data)
         assert user_id == 1
 
         created_users = list(await self.uow.users.get_all())
         assert len(created_users) == 1
 
-        expected_user = UserSchema(**user.__dict__, id=user_id)
+        expected_user = UserSchema(**user_data.__dict__, id=user_id)
         assert expected_user == created_users[0]

@@ -4,6 +4,7 @@ from common.schemas import CreatedUpdatedSchema
 class ImageSchema(CreatedUpdatedSchema):
     id: int
     post_id: int
+    image_path: str
     order: int
 
 

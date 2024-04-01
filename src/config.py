@@ -9,6 +9,7 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
 PG_HOST = os.getenv("PG_HOST", "")
 PGPORT = os.getenv("PGPORT", "")
 POSTGRES_DB = os.getenv("POSTGRES_DB", "")
+SECRET_KEY = os.getenv("SECRET_KEY", "")
 
 
 def get_postgresql_url():

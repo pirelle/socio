@@ -1,3 +1,4 @@
+import asyncio
 from abc import ABC, abstractmethod
 
 from common.database import async_session_maker
@@ -30,7 +31,7 @@ class AbstractUnitOfWork(ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-    def __init__(self, session_maker=async_session_maker):
+    def __init__(self, session_maker):
         self.session_factory = session_maker
 
     async def __aenter__(self):

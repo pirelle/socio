@@ -1,16 +1,31 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, func, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
-from config import get_postgresql_url
+from config import get_postgresql_url, get_sync_postgresql_url
 
-engine = create_async_engine(get_postgresql_url(), echo=True)
+engine = create_async_engine(get_postgresql_url(), echo=False)
+
 async_session_maker = async_sessionmaker(
     engine,
     class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+async def get_async_session_maker():
+    yield async_sessionmaker(
+        engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
+
+
+sync_engine = create_engine(get_sync_postgresql_url(), echo=True)
+session_maker = sessionmaker(
+    sync_engine,
     expire_on_commit=False,
 )
 

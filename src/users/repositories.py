@@ -8,29 +8,18 @@ from users.models import Follower, User
 class UserRepository(SQLAlchemyRepository):
     model = User
 
-    async def get_with_followers(self, user_id: int):
-        follower_user_cte = (
-            select(
-                User.id,
-                User.first_name,
-            )
-            .cte()
-        )
-
+    async def get_with_initial_info(self, user_id: int):
         followers_cte = (
             select(
                 Follower.following_id,
                 func.array_agg(
                     func.json_build_object(
                         "id", Follower.follower_id,
-                        "name", follower_user_cte.c.first_name,
+                        "name", func.concat(User.first_name, " ", User.last_name),
                     )
                 ).label("followers")
             )
-            .join(
-                follower_user_cte,
-                follower_user_cte.c.id == Follower.follower_id
-            )
+            .join(User, Follower.follower_id == User.id)
             .group_by(Follower.following_id)
             .cte()
         )
@@ -42,13 +31,14 @@ class UserRepository(SQLAlchemyRepository):
                     func.json_build_object(
                         "id", Comment.id,
                         "user_id", Comment.user_id,
+                        "name", func.concat(User.first_name, " ", User.last_name),
                         "created_at", Comment.created_at,
                         "text", Comment.text,
                     )
                 ).label("comments")
             )
+            .join(User, Comment.user_id == User.id)
             .group_by(Comment.post_id)
-            .order_by(Comment.created_at)
             .cte()
         )
 
@@ -80,11 +70,10 @@ class UserRepository(SQLAlchemyRepository):
             )
             .outerjoin(followers_cte, User.id == followers_cte.c.following_id)
             .outerjoin(posts_cte, User.id == posts_cte.c.user_id)
-            .where(User.id == 1)
+            .where(User.id == user_id)
         )
-        result = (await self.session.execute(stmt))
-        breakpoint()
-        return result
+        return list(await self.session.execute(stmt))[0]
+
 
 class FollowerRepository(SQLAlchemyRepository):
     model = Follower

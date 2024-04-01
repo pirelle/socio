@@ -26,11 +26,12 @@ class FakeRepository(AbstractRepository):
 
 
 class FakeUnitOfWork(AbstractUnitOfWork):
-    def __init__(self):
+    def __init__(self, users: list[UserSchema] = None):
         self.commited = False
+        self._userlist = users or []
 
     async def __aenter__(self):
-        self.users = FakeRepository([])
+        self.users = FakeRepository(self._userlist)
 
     async def __aexit__(self, *args):
         await self.rollback()
