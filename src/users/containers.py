@@ -1,9 +1,6 @@
-from dependency_injector import containers
-from dependency_injector.containers import WiringConfiguration, DeclarativeContainer
-from dependency_injector.providers import Resource, Provider, Factory
+from dependency_injector.providers import Resource, Factory
 
-from common.database import session_maker, async_session_maker
-from common.unitofwork import SqlAlchemyUnitOfWork
+from common.database import session_maker
 from users.services import UserService, SyncUserService
 from common.containers import Container as CommonContainer
 

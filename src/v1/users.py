@@ -5,8 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
-from common.containers import Container
-from common.unitofwork import AbstractUnitOfWork
 from users.schemas import UserSchemaAdd
 from users.services import UserService, create_access_token, SyncUserService
 from users.containers import Container as UserContainer
@@ -57,8 +55,12 @@ async def get_access_token(
     uow: UOWDep,
     user_service: Annotated[UserService, Depends(UserService)],
 ):
-    user = await user_service.authenticate_user(uow, form_data.username, form_data.password)
+    user = await user_service.authenticate_user(
+        uow, form_data.username, form_data.password
+    )
     if not user:
-        raise HTTPException(status_code=404, detail="User with these credentials not found")
+        raise HTTPException(
+            status_code=404, detail="User with these credentials not found"
+        )
     access_token = create_access_token(data={"sub": user.email})
     return Token(access_token=access_token, token_type="bearer")

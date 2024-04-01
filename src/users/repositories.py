@@ -14,10 +14,12 @@ class UserRepository(SQLAlchemyRepository):
                 Follower.following_id,
                 func.array_agg(
                     func.json_build_object(
-                        "id", Follower.follower_id,
-                        "name", func.concat(User.first_name, " ", User.last_name),
+                        "id",
+                        Follower.follower_id,
+                        "name",
+                        func.concat(User.first_name, " ", User.last_name),
                     )
-                ).label("followers")
+                ).label("followers"),
             )
             .join(User, Follower.follower_id == User.id)
             .group_by(Follower.following_id)
@@ -29,13 +31,18 @@ class UserRepository(SQLAlchemyRepository):
                 Comment.post_id,
                 func.array_agg(
                     func.json_build_object(
-                        "id", Comment.id,
-                        "user_id", Comment.user_id,
-                        "name", func.concat(User.first_name, " ", User.last_name),
-                        "created_at", Comment.created_at,
-                        "text", Comment.text,
+                        "id",
+                        Comment.id,
+                        "user_id",
+                        Comment.user_id,
+                        "name",
+                        func.concat(User.first_name, " ", User.last_name),
+                        "created_at",
+                        Comment.created_at,
+                        "text",
+                        Comment.text,
                     )
-                ).label("comments")
+                ).label("comments"),
             )
             .join(User, Comment.user_id == User.id)
             .group_by(Comment.post_id)
@@ -47,12 +54,16 @@ class UserRepository(SQLAlchemyRepository):
                 Post.user_id,
                 func.array_agg(
                     func.json_build_object(
-                        "id", Post.id,
-                        "title", Post.text,
-                        "created_at", Post.created_at,
-                        "comments", comments_cte.c.comments,
+                        "id",
+                        Post.id,
+                        "title",
+                        Post.text,
+                        "created_at",
+                        Post.created_at,
+                        "comments",
+                        comments_cte.c.comments,
                     )
-                ).label("posts")
+                ).label("posts"),
             )
             .outerjoin(
                 comments_cte,

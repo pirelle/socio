@@ -1,4 +1,3 @@
-from typing import Generator
 
 import pytest
 from sqlalchemy import create_engine
@@ -10,9 +9,6 @@ from common.models import *  # noqa
 from common.unitofwork import SqlAlchemyUnitOfWork
 from config import get_test_async_postgresql_url, get_test_postgresql_url
 from main import app
-from tests.unit.users.fakes import FakeUnitOfWork
-from users.services import UserService
-from v1.dependencies import get_uow
 
 
 @pytest.fixture(scope="session")
@@ -25,9 +21,6 @@ async def psql_create_db():
     yield engine
 
     BaseWithId.metadata.drop_all(engine)
-
-
-
 
 
 @pytest.fixture(scope="function")
@@ -77,7 +70,7 @@ async def async_session(psql_create_db):
     print("asession close")
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 async def client():
     with TestClient(app) as test_client:
         yield test_client

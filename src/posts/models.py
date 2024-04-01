@@ -13,8 +13,12 @@ class Post(CreatedUpdatedMixin, BaseWithId):
 
     user_id: Mapped[int] = mapped_column(ForeignKey(User.id))
     text: Mapped[str] = mapped_column(String(1000), nullable=True)
-    allow_comments: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
-    is_published: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
+    allow_comments: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default=true()
+    )
+    is_published: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default=true()
+    )
 
 
 class Image(CreatedUpdatedMixin, BaseWithId):

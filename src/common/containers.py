@@ -1,5 +1,5 @@
-from dependency_injector.containers import DeclarativeContainer, WiringConfiguration
-from dependency_injector.providers import Provider, Factory, Resource
+from dependency_injector.containers import DeclarativeContainer
+from dependency_injector.providers import Factory, Resource
 
 from common.database import get_async_session_maker
 from common.unitofwork import AbstractUnitOfWork, SqlAlchemyUnitOfWork
