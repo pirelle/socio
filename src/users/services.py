@@ -3,7 +3,6 @@ from sqlalchemy import select
 from jose import jwt
 from passlib.context import CryptContext
 
-from common.unitofwork import AbstractUnitOfWork
 from users.models import User
 from users.schemas import UserSchema, UserSchemaAdd
 from config import SECRET_KEY
@@ -28,13 +27,10 @@ class UserService:
             return users
 
     async def authenticate_user(
-        self, uow: AbstractUnitOfWork, username: str, password: str
+        self, username: str, password: str
     ) -> UserSchema | None:
-        async with uow:
-            user = await uow.users.get(email=username)
-            # users = await self.uow.users.get_all()
-            # breakpoint()
-            ...
+        async with self.uow:
+            user = await self.uow.users.get(email=username)
         if not user:
             return None
         if not pwd_context.verify(password, user.password):

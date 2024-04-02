@@ -23,12 +23,13 @@ async def users(uow_mock):
             id=1,
             first_name="",
             last_name="",
-            email="asdf@asdf.ff",
-            password="str",
+            email="test@email.com",
+            password="$2b$12$IHRIA3SVdclsOsUSsf6UbeRjfX8LoVYXJwlmA8p2SESv4i3eQSQ7m",
             is_active=True,
             user_type=UserType.REGULAR,
         )
     ]
     uow_mock.users = Mock(spec=UserRepository)
     uow_mock.users.get_all.return_value = users_list
+    uow_mock.users.get.return_value = users_list[0]
     yield users_list

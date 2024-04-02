@@ -50,14 +50,12 @@ async def add_user(
 
 
 @router.post("/token")
+@inject
 async def get_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    uow: UOWDep,
-    user_service: Annotated[UserService, Depends(UserService)],
+    user_service: UserService = Depends(Provide[UserContainer.user_service]),
 ):
-    user = await user_service.authenticate_user(
-        uow, form_data.username, form_data.password
-    )
+    user = await user_service.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=404, detail="User with these credentials not found"

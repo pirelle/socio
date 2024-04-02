@@ -12,7 +12,7 @@ class FakeRepository(AbstractRepository):
         self._batches.add(user)
         return user.id
 
-    async def find_one(self, **filter_by):
+    async def get(self, **filter_by):
         return next(
             b
             for b in self._batches
