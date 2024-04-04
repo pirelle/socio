@@ -26,7 +26,7 @@ class FakeRepository(AbstractRepository):
 
 
 class FakeUnitOfWork(AbstractUnitOfWork):
-    def __init__(self, users: list[UserSchema] = None):
+    def __init__(self, users: list[UserSchema] | None = None):
         self.commited = False
         self._userlist = users or []
 

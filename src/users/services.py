@@ -14,10 +14,16 @@ class UserService:
     def __init__(self, uow):
         self.uow = uow
 
+    @staticmethod
+    def encrypt_password(password):
+        return pwd_context.encrypt(password)
+
     async def add_user(self, user: UserSchemaAdd) -> int:
-        user_dict = user.model_dump()
         async with self.uow:
-            user_id = await self.uow.users.add(user_dict)
+            user_id = await self.uow.users.add({
+                **user.model_dump(),
+                "password": self.encrypt_password(user.password)
+            })
             await self.uow.commit()
             return user_id
 
@@ -37,11 +43,11 @@ class UserService:
             return None
         return user
 
-
-def create_access_token(data: dict):
-    to_encode = data.copy()
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
-    return encoded_jwt
+    @staticmethod
+    def create_access_token(data: dict):
+        to_encode = data.copy()
+        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
+        return encoded_jwt
 
 
 class SyncUserService:

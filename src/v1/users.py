@@ -1,14 +1,11 @@
 from typing import Annotated
 
-from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from users.schemas import UserSchemaAdd
-from users.services import UserService, create_access_token, SyncUserService
-from users.containers import Container as UserContainer
-from v1.dependencies import UOWDep
+from v1.dependencies import UserServiceDep
 
 router = APIRouter(
     prefix="/users",
@@ -22,43 +19,29 @@ class Token(BaseModel):
 
 
 @router.get("")
-@inject
-async def get_users(
-    user_service: UserService = Depends(Provide[UserContainer.user_service]),
-):
+async def get_users(user_service: UserServiceDep):
     users = await user_service.get_users()
     return users
 
 
-@router.get("/sync")
-@inject
-async def get_users_sync(
-    user_service: SyncUserService = Depends(Provide[UserContainer.sync_user_service]),
-):
-    users = user_service.get_users()
-    return users
-
-
-@router.post("")
+@router.post("", status_code=201)
 async def add_user(
     user: UserSchemaAdd,
-    uow: UOWDep,
-    user_service: Annotated[UserService, Depends(UserService)],
+    user_service: UserServiceDep,
 ):
-    user_id = await user_service.add_user(uow, user)
+    user_id = await user_service.add_user(user)
     return {"user_id": user_id}
 
 
 @router.post("/token")
-@inject
 async def get_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    user_service: UserService = Depends(Provide[UserContainer.user_service]),
+    user_service: UserServiceDep,
 ):
     user = await user_service.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=404, detail="User with these credentials not found"
         )
-    access_token = create_access_token(data={"sub": user.email})
+    access_token = user_service.create_access_token(data={"sub": user.email})
     return Token(access_token=access_token, token_type="bearer")

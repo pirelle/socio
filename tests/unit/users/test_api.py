@@ -1,35 +1,46 @@
 import json
+from types import SimpleNamespace
+from unittest.mock import call
 
-from fastapi.testclient import TestClient
-
-from main import app
+from users.schemas import PublicUserSchema
 
 
-class TestApi:
-    async def test_users(self, client, users):
-        response = client.get("/users/")
-        assert response.status_code == 200
-        assert response.json() == [json.loads(users[0].model_dump_json())]
-
-    async def test_token_no_user(self, client, users):
-        client = TestClient(app=app)
-        response = client.post("/users/token", data={"username": "1", "password": "2"})
-        assert response.status_code == 404
-        assert response.json() == {"detail": "User with these credentials not found"}
-
-    async def test_token_wrong_password(self, client, users):
-        response = client.post(
-            "/users/token", data={"username": "test@email.com", "password": "2"}
+def test_users(client, user_service):
+    users_list = [
+        PublicUserSchema(
+            id=1,
+            first_name="",
+            last_name="",
         )
-        assert response.status_code == 404
-        assert response.json() == {"detail": "User with these credentials not found"}
+    ]
+    user_service.get_users.return_value = users_list
+    response = client.get("/users/")
+    assert response.status_code == 200
+    assert response.json() == [json.loads(users_list[0].model_dump_json())]
 
-    async def test_token(self, client, users):
-        response = client.post(
-            "/users/token", data={"username": "test@email.com", "password": "password"}
-        )
-        assert response.status_code == 200
-        assert response.json() == {
-            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSJ9.7Lh72XrVoh5YTRN1IrH4ResAmMtk5vL4aKCyMVbaoGc",
-            "token_type": "bearer",
-        }
+
+def test_add_user(client, user_service, add_user_data):
+    user_service.add_user.return_value = 777
+    response = client.post("/users/", data=add_user_data.model_dump_json())
+    assert response.status_code == 201
+    assert response.json() == {"user_id": 777}
+
+
+def test_token_no_user(client, user_service):
+    user_service.authenticate_user.return_value = None
+    response = client.post("/users/token", data={"username": "1", "password": "2"})
+    assert response.status_code == 404
+    assert response.json() == {"detail": "User with these credentials not found"}
+    assert user_service.authenticate_user.call_args_list == [call("1", "2")]
+
+
+def test_token(client, user_service):
+    user_service.authenticate_user.return_value = SimpleNamespace(email="asdf@asdf.com")
+    user_service.create_access_token.return_value = "sometoken"
+
+    response = client.post("/users/token", data={"username": "1", "password": "2"})
+    assert response.status_code == 200
+    assert response.json() == {
+        "access_token": user_service.create_access_token.return_value,
+        "token_type": "bearer",
+    }

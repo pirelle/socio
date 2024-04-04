@@ -10,21 +10,13 @@ from users.schemas import UserSchema, UserSchemaAdd
 
 
 class TestUserRepository:
-    async def test_add(self, async_session: AsyncSession):
-        user = UserSchemaAdd(
-            first_name="John",
-            last_name="Doe",
-            email="emai1l@email.com",
-            password="pass",
-            is_active=True,
-            user_type=UserType.REGULAR,
-        )
+    async def test_add(self, add_user_data: UserSchemaAdd, async_session: AsyncSession):
         user_repo = UserRepository(async_session)
-        user_id = await user_repo.add(user.model_dump())
+        user_id = await user_repo.add(add_user_data.model_dump())
         await async_session.commit()
         created_users = list(await user_repo.get_all())
 
-        expected_user = UserSchema(**user.__dict__, id=user_id)
+        expected_user = UserSchema(**add_user_data.__dict__, id=user_id)
         assert len(created_users) == 1
         assert expected_user == created_users[0]
 

@@ -2,34 +2,32 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from common.unitofwork import SqlAlchemyUnitOfWork
+from common.unitofwork import AbstractUnitOfWork
 from main import app
-from users.enums import UserType
+from fastapi.testclient import TestClient
+
+from posts.repositories import PostRepository
 from users.repositories import UserRepository
-from users.schemas import UserSchema
+from users.services import UserService
+from v1.dependencies import get_user_service
 
 
 @pytest.fixture(scope="function")
-async def uow_mock():
-    uow_mocked = AsyncMock(spec=SqlAlchemyUnitOfWork)
-    with app.container.uow.override(uow_mocked):
-        yield uow_mocked
+def client():
+    with TestClient(app) as test_client:
+        yield test_client
 
 
 @pytest.fixture(scope="function")
-async def users(uow_mock):
-    users_list = [
-        UserSchema(
-            id=1,
-            first_name="",
-            last_name="",
-            email="test@email.com",
-            password="$2b$12$IHRIA3SVdclsOsUSsf6UbeRjfX8LoVYXJwlmA8p2SESv4i3eQSQ7m",
-            is_active=True,
-            user_type=UserType.REGULAR,
-        )
-    ]
-    uow_mock.users = Mock(spec=UserRepository)
-    uow_mock.users.get_all.return_value = users_list
-    uow_mock.users.get.return_value = users_list[0]
-    yield users_list
+def user_service() -> AsyncMock:
+    mocked_user_service = AsyncMock(spec=UserService)
+    app.dependency_overrides[get_user_service] = lambda: mocked_user_service
+    return mocked_user_service
+
+
+@pytest.fixture(scope="function")
+def uow() -> AsyncMock:
+    mocked_uow = AsyncMock(spec=AbstractUnitOfWork)
+    mocked_uow.users = AsyncMock(spec=UserRepository)
+    mocked_uow.posts = AsyncMock(spec=PostRepository)
+    return mocked_uow

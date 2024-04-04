@@ -1,13 +1,16 @@
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 from common.schemas import CreatedUpdatedSchema
 from posts.schemas import PostSchema
 from users.enums import UserType
 
 
-class UserSchemaAdd(CreatedUpdatedSchema):
+class BaseUserSchema(BaseModel):
     first_name: str
     last_name: str
+
+
+class UserSchemaAdd(CreatedUpdatedSchema, BaseUserSchema):
     email: EmailStr
     password: str
     is_active: bool
@@ -23,3 +26,7 @@ class UserSchema(UserSchemaAdd):
     id: int
     posts: list[PostSchema] | None = None
     followers: list[int] | None = None
+
+
+class PublicUserSchema(BaseUserSchema):
+    id: int
