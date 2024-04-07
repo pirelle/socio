@@ -1,11 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from users.schemas import UserSchemaAdd
-from v1.dependencies import UserServiceDep
+from common.dependencies import UserServiceDep
 
 router = APIRouter(
     prefix="/users",
@@ -22,6 +22,12 @@ class Token(BaseModel):
 async def get_users(user_service: UserServiceDep):
     users = await user_service.get_users()
     return users
+
+
+# @router.get("")
+# async def get_users(user_service: UserService = Depends(Provide[UserContainer.user_service])):
+#     users = await user_service.get_users()
+#     return users
 
 
 @router.post("", status_code=201)

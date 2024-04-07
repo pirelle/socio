@@ -8,6 +8,9 @@ asyncio_mode='auto'
 addopts = [
     "--import-mode=importlib",
 ]
+filterwarnings = [
+    "ignore:::.*passlib*:854",
+]
 
 [tool.mypy]
 mypy_path = "src"

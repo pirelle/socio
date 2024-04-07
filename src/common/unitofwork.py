@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from inspect import isasyncgen
 
 from common.repository import AbstractRepository
 from posts.repositories import CommentRepository, ImageRepository, PostRepository
@@ -33,7 +34,11 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         self.session_factory = session_maker
 
     async def __aenter__(self):
-        self.session = self.session_factory()
+        self.session = (
+            await anext(self.session_factory)
+            if isasyncgen(self.session_factory)
+            else self.session_factory()
+        )
         self.users = UserRepository(self.session)
         self.posts = PostRepository(self.session)
         self.images = ImageRepository(self.session)
@@ -42,6 +47,8 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
     async def __aexit__(self, *args):
         await self.rollback()
         await self.session.close()
+        if isasyncgen(self.session_factory):
+            await anext(self.session_factory)
 
     async def commit(self):
         await self.session.commit()

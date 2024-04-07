@@ -1,29 +1,31 @@
-from sqlalchemy import select
-
 from jose import jwt
-from passlib.context import CryptContext
 
-from users.models import User
 from users.schemas import UserSchema, UserSchemaAdd
 from config import SECRET_KEY
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 class UserService:
-    def __init__(self, uow):
+    def __init__(
+        self,
+        uow,
+        encrypt_password_strat,
+        verify_password_strat,
+    ):
         self.uow = uow
+        self._encrypt_password_strat = encrypt_password_strat
+        self._verify_password_strat = verify_password_strat
 
-    @staticmethod
-    def encrypt_password(password):
-        return pwd_context.encrypt(password)
+    def encrypt_password(self, password):
+        return self._encrypt_password_strat(password)
+
+    def verify_password(self, password, hashed):
+        return self._verify_password_strat(password, hashed)
 
     async def add_user(self, user: UserSchemaAdd) -> int:
         async with self.uow:
-            user_id = await self.uow.users.add({
-                **user.model_dump(),
-                "password": self.encrypt_password(user.password)
-            })
+            user_id = await self.uow.users.add(
+                {**user.model_dump(), "password": self.encrypt_password(user.password)}
+            )
             await self.uow.commit()
             return user_id
 
@@ -37,9 +39,7 @@ class UserService:
     ) -> UserSchema | None:
         async with self.uow:
             user = await self.uow.users.get(email=username)
-        if not user:
-            return None
-        if not pwd_context.verify(password, user.password):
+        if not user or not self.verify_password(password, user.password):
             return None
         return user
 
@@ -48,14 +48,3 @@ class UserService:
         to_encode = data.copy()
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
         return encoded_jwt
-
-
-class SyncUserService:
-    def __init__(self, session):
-        self.session = session
-
-    def get_users(self) -> list[UserSchema]:
-        stmt = select(User)
-        res = self.session.execute(stmt)
-        res = [row[0].to_read_model() for row in res.all()]
-        return res
