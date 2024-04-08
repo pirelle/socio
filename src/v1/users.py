@@ -24,12 +24,6 @@ async def get_users(user_service: UserServiceDep):
     return users
 
 
-# @router.get("")
-# async def get_users(user_service: UserService = Depends(Provide[UserContainer.user_service])):
-#     users = await user_service.get_users()
-#     return users
-
-
 @router.post("", status_code=201)
 async def add_user(
     user: UserSchemaAdd,

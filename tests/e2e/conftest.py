@@ -7,7 +7,6 @@ from common.database import BaseWithId
 from common.unitofwork import SqlAlchemyUnitOfWork
 from config import get_test_postgresql_url, get_test_async_postgresql_url
 from main import app
-from common.dependencies import get_uow
 
 
 @pytest.fixture(scope="session")

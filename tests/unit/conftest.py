@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from posts.repositories import PostRepository
 from users.repositories import UserRepository
 from users.services import UserService
-from common.dependencies import get_user_service_from_container
+from common.dependencies import get_user_service
 
 
 @pytest.fixture(scope="function")
@@ -21,9 +21,7 @@ def client():
 @pytest.fixture(scope="function")
 def user_service() -> AsyncMock:
     mocked_user_service = AsyncMock(spec=UserService)
-    app.dependency_overrides[get_user_service_from_container] = (
-        lambda: mocked_user_service
-    )
+    app.dependency_overrides[get_user_service] = lambda: mocked_user_service
     return mocked_user_service
 
 
