@@ -16,6 +16,14 @@ def get_postgresql_url():
     return f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{PG_HOST}:{PGPORT}/{POSTGRES_DB}"
 
 
+def get_async_mssql_url():
+    return "mssql+aioodbc://sa:1q2w3eRR!%40@localhost/FirstDB?charset=utf8&driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
+
+
+def get_mssql_url():
+    return "mssql+pymssql://sa:1q2w3eRR!%40@127.0.0.1:1433/FirstDB?charset=utf8"
+
+
 def get_sync_postgresql_url():
     return f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{PG_HOST}:{PGPORT}/{POSTGRES_DB}"
 

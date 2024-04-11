@@ -1,9 +1,8 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from common.database import BaseWithId
+from common.database import BaseWithId, sync_mssql_engine
 from common.models import *  # noqa
 from config import PG_HOST, PGPORT, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER
 
@@ -67,12 +66,14 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    # connectable = engine_from_config(
+    #     config.get_section(config.config_ini_section, {}),
+    #     prefix="sqlalchemy.",
+    #     poolclass=pool.NullPool,
+    # )
 
+    # connectable = engine
+    connectable = sync_mssql_engine
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
 
