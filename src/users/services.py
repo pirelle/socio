@@ -34,11 +34,16 @@ class UserService:
             users = await self.uow.users.get_all()
             return users
 
+    async def get_user(self, email: str) -> UserSchema:
+        async with self.uow:
+            user = await self.uow.users.get(email=email)
+        return user
+
     async def authenticate_user(
         self, username: str, password: str
     ) -> UserSchema | None:
         async with self.uow:
-            user = await self.uow.users.get(email=username)
+            user = await self.get_user(username)
         if not user or not self.verify_password(password, user.password):
             return None
         return user
@@ -48,3 +53,8 @@ class UserService:
         to_encode = data.copy()
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
         return encoded_jwt
+
+    @staticmethod
+    def decode_token(token: str):
+        data = jwt.decode(token, SECRET_KEY)
+        return data

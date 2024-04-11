@@ -80,3 +80,14 @@ class TestUserService:
             self.password,
         )
         assert is_authenticated is None
+
+    async def test_create_access_token(self, uow):
+        data = {"test": 1}
+        user_service = self.container.user_service()
+        encoded_data = user_service.create_access_token(data)
+        assert (
+            encoded_data
+            == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoxfQ.vXPhp1pyX9gmdcgX2-QmbQWDmxUowFvd6kVg9NpcRhI"
+        )
+        decoded_data = user_service.decode_token(encoded_data)
+        assert data == decoded_data

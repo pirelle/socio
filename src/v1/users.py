@@ -1,21 +1,15 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends
 
-from users.schemas import UserSchemaAdd
+from users.schemas import UserSchemaAdd, UserSchema
 from common.dependencies import UserServiceDep
+from v1.utils import get_current_user
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
 )
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
 
 @router.get("")
@@ -33,15 +27,8 @@ async def add_user(
     return {"user_id": user_id}
 
 
-@router.post("/token")
-async def get_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    user_service: UserServiceDep,
+@router.get("/me", response_model=UserSchema)
+async def read_users_me(
+    current_user: Annotated[UserSchema, Depends(get_current_user)],
 ):
-    user = await user_service.authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=404, detail="User with these credentials not found"
-        )
-    access_token = user_service.create_access_token(data={"sub": user.email})
-    return Token(access_token=access_token, token_type="bearer")
+    return current_user

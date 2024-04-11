@@ -50,7 +50,7 @@ def test_db(async_session_maker):
     def get_test_uow():
         return SqlAlchemyUnitOfWork(session_maker=async_session_maker)
 
-    app.dependency_overrides[get_uow] = get_test_uow
+    # app.dependency_overrides[get_uow] = get_test_uow
     return async_session_maker
 
 
