@@ -19,6 +19,8 @@ build-job:
     - pwd
     - docker info
     - docker compose -f docker-compose.test.yml build
+  tags:
+    - tag1
 
 #test-job1:
 #  stage: test
