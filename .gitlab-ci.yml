@@ -13,7 +13,7 @@ build-job:
   stage: build
   script:
     - unset DOCKER_HOST
-    - echo "Hello, $GITLAB_USER_LOGIN!"
+#    - echo "Hello, $GITLAB_USER_LOGIN!"
     - ls /var/run/ -ls
     - ls
     - pwd
