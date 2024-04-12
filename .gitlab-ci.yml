@@ -1,5 +1,10 @@
 image: docker:latest
 
+
+default:
+  before_script:
+    - docker info
+
 build-job:
   stage: build
   script:
@@ -8,6 +13,7 @@ build-job:
     - ls /var/run/ -ls
     - ls
     - pwd
+    - docker info
     - docker compose -f docker-compose.test.yml build
 
 test-job1:
