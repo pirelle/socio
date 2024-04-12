@@ -22,6 +22,7 @@ services:
       - POSTGRES_USER=test_psqluser
       - POSTGRES_PASSWORD=test_psqlpass
       - POSTGRES_DB=test_psqldb
+      - PGUSER=postgres
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 5s

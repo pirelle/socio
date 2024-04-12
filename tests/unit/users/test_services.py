@@ -87,7 +87,7 @@ class TestUserService:
         encoded_data = user_service.create_access_token(data)
         assert (
             encoded_data
-            == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoxfQ.vXPhp1pyX9gmdcgX2-QmbQWDmxUowFvd6kVg9NpcRhI"
+            == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXN0IjoxfQ.o8itpUDv0j3ZbKoBOMIPeIC830JOXP6FqQjIKfV2XzE"
         )
         decoded_data = user_service.decode_token(encoded_data)
         assert data == decoded_data

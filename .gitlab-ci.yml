@@ -1,25 +1,8 @@
 image: docker:latest
 
-
-#default:
-#  before_script:
-#    - unset DOCKER_HOST
-#    - ls /var/run/ -ls
-#    - ls
-#    - ls
-#    - docker info
-
 build-job:
   stage: build
   script:
-    - unset DOCKER_HOST
-#    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - whoami
-    - ls /var/run/ -ls
-#    - ls /var/run/docker.sock -ls
-    - ls
-    - pwd
-    - docker info
     - docker compose -f docker-compose.test.yml build
   tags:
     - tag1
@@ -32,14 +15,6 @@ test-job1:
   tags:
     - tag1
 
-#test-job2:
-#  stage: test
-#  script:
-#    - echo "This job tests something, but takes more time than test-job1."
-#    - echo "After the echo commands complete, it runs the sleep command for 20 seconds"
-#    - echo "which simulates a test that runs 20 seconds longer than test-job1"
-#    - sleep 20
-#
 #deploy-prod:
 #  stage: deploy
 #  script:
