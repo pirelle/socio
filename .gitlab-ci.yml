@@ -4,6 +4,8 @@ image: docker:latest
 default:
   before_script:
     - unset DOCKER_HOST
+    - ls /var/run/ -ls
+    - ls
     - docker info
 
 build-job:
