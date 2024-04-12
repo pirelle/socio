@@ -19,8 +19,8 @@ services:
     container_name: test_psql
     hostname: psqlhost
     environment:
-      - POSTGRES_USER=psqluser
-      - POSTGRES_PASSWORD=psqlpass
+      - POSTGRES_USER=test_psqluser
+      - POSTGRES_PASSWORD=test_psqlpass
       - POSTGRES_DB=test_psqldb
     healthcheck:
       test: /usr/bin/pg_isready
