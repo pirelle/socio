@@ -17,7 +17,7 @@ build-job:
 #    - echo "Hello, $GITLAB_USER_LOGIN!"
     - whoami
     - ls /var/run/ -ls
-    - ls /var/run/docker.sock -ls
+#    - ls /var/run/docker.sock -ls
     - ls
     - pwd
     - docker info
