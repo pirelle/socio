@@ -8,3 +8,6 @@ dev:
 runprod:
 	alembic upgrade head
 	cd src && uvicorn main:app --reload --host 0.0.0.0
+
+test-ci:
+	pytest tests/unit/ tests/integration/

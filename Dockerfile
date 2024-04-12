@@ -18,8 +18,7 @@ RUN pip install -r requirements.txt
 # Creating folders, and files for a project:
 COPY src /code/src
 COPY alembic /code/alembic
+COPY tests /code/tests
 COPY Makefile /code
 COPY alembic.ini /code
-
-#RUN chmod +x /code/src/entrypoint.sh
-#CMD ["entrypoint.sh"]
+COPY pyproject.toml /code

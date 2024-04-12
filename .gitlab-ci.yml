@@ -2,11 +2,13 @@ build-job:
   stage: build
   script:
     - echo "Hello, $GITLAB_USER_LOGIN!"
+    - docker compose -f docker-compose.test.yml build
 
 test-job1:
   stage: test
   script:
     - echo "This job tests something"
+    - docker compose -f docker-compose.test.yml up --exit-code-from test_back
 
 test-job2:
   stage: test
