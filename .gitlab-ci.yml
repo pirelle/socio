@@ -24,11 +24,11 @@ build-job:
   tags:
     - tag1
 
-#test-job1:
-#  stage: test
-#  script:
-#    - echo "This job tests something"
-#    - docker compose -f docker-compose.test.yml up --exit-code-from test_back
+test-job1:
+  stage: test
+  script:
+    - echo "This job tests something"
+    - docker compose -f docker-compose.test.yml up --exit-code-from test_back
 #
 #test-job2:
 #  stage: test
