@@ -14,7 +14,7 @@ build-job:
   script:
     - unset DOCKER_HOST
 #    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - echo "$USER"
+    - whoami
     - ls /var/run/ -ls
     - ls
     - pwd
