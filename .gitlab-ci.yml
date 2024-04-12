@@ -2,6 +2,7 @@ default:
   before_script:
     - unset DOCKER_HOST
     - ls /var/run/ -ls
+    - ls /var/run/ -ls
     - ls
     - docker info
 
