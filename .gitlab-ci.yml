@@ -9,7 +9,6 @@ image: docker:latest
 #    - ls
 #    - docker info
 
-
 build-job:
   stage: build
   script:
