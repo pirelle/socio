@@ -7,7 +7,7 @@ services:
       - POSTGRES_USER=psqluser
       - POSTGRES_PASSWORD=psqlpass
       - PG_HOST=psqlhost
-      - PGPORT=psqlport
+      - PGPORT=5432
       - POSTGRES_DB=psqldb
       - SECRET_KEY=12345
     depends_on:
