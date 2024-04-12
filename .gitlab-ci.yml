@@ -6,6 +6,7 @@ default:
     - unset DOCKER_HOST
     - ls /var/run/ -ls
     - ls
+    - ls
     - docker info
 
 build-job:
