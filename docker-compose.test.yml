@@ -4,12 +4,12 @@ services:
     build: .
     container_name: test_back
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - PG_HOST=${PG_HOST}
-      - PGPORT=${PGPORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_USER=psqluser
+      - POSTGRES_PASSWORD=psqlpass
+      - PG_HOST=psqlhost
+      - PGPORT=psqlport
+      - POSTGRES_DB=psqldb
+      - SECRET_KEY=12345
     depends_on:
       test_postgres:
           condition: service_healthy
@@ -17,11 +17,11 @@ services:
   test_postgres:
     image: postgres:latest
     container_name: test_psql
-    hostname: ${PG_HOST}
+    hostname: psqlhost
     environment:
-      - POSTGRES_USER=test_${POSTGRES_USER}
-      - POSTGRES_PASSWORD=test_${POSTGRES_PASSWORD}
-      - POSTGRES_DB=test_${POSTGRES_DB}
+      - POSTGRES_USER=psqluser
+      - POSTGRES_PASSWORD=psqlpass
+      - POSTGRES_DB=test_psqldb
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 5s
